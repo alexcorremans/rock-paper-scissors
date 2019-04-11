@@ -1,12 +1,14 @@
 # Rock Paper Scissors
 
-This is a Rock Paper Scissors game written in JavaScript and played on the browser console. 
+This is a Rock Paper Scissors game written in JavaScript. 
 
-- The user gets prompted for a choice (cancelling ends the game, empty choice refreshes the prompt)
-- This choice is then played against a random choice made by the browser. The result is displayed on the console.
+- The user can start the game by clicking one of the three choices
+- This choice is then played against a random choice made by the script. The result is displayed on the page. 
 - This is repeated over five rounds
-- At the end the scores are printed to the console.
-
-(I might add a frontend to this later.)
+- After the fifth round:
+  - the winner is declared
+  - the final score is displayed
+  - the buttons are disabled
+  - a 'play again' button triggers a reset. 
 
 From The Odin Project's [curriculum](https://www.theodinproject.com/courses/web-development-101/lessons/rock-paper-scissors). 
