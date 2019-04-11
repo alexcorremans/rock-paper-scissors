@@ -2,6 +2,9 @@
 
 This is a Rock Paper Scissors game written in JavaScript. 
 
+Play it [here](https://alexcorremans.github.io/rock-paper-scissors/)!
+
+Specifics:
 - The user can start the game by clicking one of the three choices
 - This choice is then played against a random choice made by the script. The result is displayed on the page. 
 - This is repeated over five rounds
