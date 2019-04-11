@@ -2,53 +2,40 @@ String.prototype.capitalize = function() {
   return this[0].toUpperCase() + this.slice(1);
 }
 
-function game() {
-  let round = 1;
-  let playerScore = 0;
-  let computerScore = 0;
+function playRound(e) {
+  round++;
+  printHeading(`Round ${round}`);
   
-  while (round <= 5) {
-    let playerSelection = playerSelect();
-    if (!playerSelection) {
-      gameEnded(playerScore, computerScore);
-      return;
-    }
-    playerSelection = playerSelection.toLowerCase();
-    let computerSelection = computerPlay();
-
-    result = playRound(playerSelection, computerSelection);
-    if (result == 'win') {
-      console.log(winMessage(playerSelection, computerSelection));
-      playerScore += 2;
-    } else if (result == 'lose') {
-      console.log(loseMessage(playerSelection, computerSelection));
-      computerScore += 2;
-    } else {
-      console.log(tieMessage(playerSelection, computerSelection));
-      playerScore++;
-      computerScore++;
-    }
-    round++;
+  const playerSelection = e.target.id;
+  const computerSelection = computerPlay();
+  
+  result = compareSelections(playerSelection, computerSelection);
+  if (result == 'win') {
+    printMessage(winMessage(playerSelection, computerSelection));
+    playerScore += 2;
+  } else if (result == 'lose') {
+    printMessage(loseMessage(playerSelection, computerSelection));
+    computerScore += 2;
+  } else {
+    printMessage(tieMessage(playerSelection, computerSelection));
+    playerScore++;
+    computerScore++;
   }
-
-  declareWinner(playerScore, computerScore);        
-}
-
-function playerSelect() {
-  let choice = '';
-  while (choice === '') {
-    choice = prompt("Please choose 'rock', 'paper' or 'scissors' or press 'Cancel' to end the game:")
-  }
-  return choice;
+  
+  if (round == 5) {
+    endGame(playerScore, computerScore);
+  } else {
+    printScores(playerScore, computerScore);
+  }     
 }
 
 function computerPlay() {
   const CHOICES = ['rock', 'paper', 'scissors']
-  let i = Math.floor(Math.random() * 3);
+  const i = Math.floor(Math.random() * 3);
   return CHOICES[i];
 }
 
-function playRound(playerSelection, computerSelection) {
+function compareSelections(playerSelection, computerSelection) {
   if (playerSelection == computerSelection) {
     return 'tie';
   } else if (
@@ -73,24 +60,88 @@ function tieMessage(playerSelection) {
   return `It's a tie! You both picked ${playerSelection.capitalize()}`;
 }
 
-function gameEnded(playerScore, computerScore) {
-  console.log("You've ended the game.");
-  printScores(playerScore, computerScore);
+function endGame(playerScore, computerScore) {
+  declareWinner(playerScore, computerScore);
+  disableButtons();
+  showResetButton();
 }
 
 function declareWinner(playerScore, computerScore) {
   if (playerScore > computerScore) {
-    console.log("You've won the game!");
+    printHeading("You've won the game!");
   } else if (playerScore < computerScore) {
-    console.log("You've lost the game!");
+    printHeading("You've lost the game!");
   } else {
-    console.log("It's a tie!");
+    printHeading("It's a tie!");
   }
   printScores(playerScore, computerScore);
 }
 
 function printScores(playerScore, computerScore) {
-  console.log(`Your score: ${playerScore} points - Computer score: ${computerScore} points`);
+  printMessage(`Your score: ${playerScore} points - Computer score: ${computerScore} points`);
 }
 
-game();
+function printMessage(message) {
+  const display = document.querySelector('#display');
+  const p = document.createElement('p');
+  p.textContent = message;
+  display.appendChild(p);
+}
+
+function printHeading(heading) {
+  const display = document.querySelector('#display');
+  const h2 = document.createElement('h2');
+  h2.textContent = heading;
+  display.appendChild(h2);
+}
+
+function disableButtons() {
+  buttons.forEach((button) => {
+    button.disabled = true;
+  });
+}
+
+function enableButtons() {
+  buttons.forEach((button) => {
+    button.disabled = false;
+  });
+}
+
+function showResetButton() {
+  const reset = document.querySelector('#reset');
+  const resetbtn = document.createElement('button');
+  resetbtn.textContent = "Play Again!"
+  resetbtn.addEventListener('click', resetGame);
+  reset.appendChild(resetbtn);
+}
+
+function hideResetButton() {
+  reset.removeChild(reset.firstChild);
+}
+
+function resetGame() {
+  round = 0;
+  playerScore = 0;
+  computerScore = 0;
+
+  hideMessages();
+  enableButtons();
+  hideResetButton();
+}
+
+function hideMessages() {
+  const display = document.querySelector('#display');
+  while (display.firstChild) {
+    display.removeChild(display.firstChild);
+  }
+}
+
+let round = 0;
+let playerScore = 0;
+let computerScore = 0;
+
+const buttons = document.querySelectorAll('button');
+buttons.forEach((button) => {
+  button.addEventListener('click', playRound);
+});
+
